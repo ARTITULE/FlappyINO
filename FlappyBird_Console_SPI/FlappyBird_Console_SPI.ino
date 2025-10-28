@@ -8,14 +8,15 @@
 #define Menu_FPS 30
 #define Game_FPS 30
 
-#define Save_Amount 3
-
 #define EEPROM_KEY 0xB2  
 #define KEY_EE_ADDR 0     
 #define S1_HI_SCR_ADDR 1
 #define S2_HI_SCR_ADDR 3     
-#define S3_HI_SCR_ADDR 5          
+#define S3_HI_SCR_ADDR 5    
 
+#define INTERNAL_REF  1075L
+#define BATTERY_FULL  4200
+#define BATTERY_EMPTY 2900
 
 
 #include <GyverOLED.h>
@@ -27,7 +28,7 @@
 GyverOLED <SSD1306_128x64, OLED_BUFFER, OLED_SPI, OLED_CS, OLED_DC, OLED_RST> oled;
 GButton main_button(Button_Pin);
 
-
+int8_t Save_Amount = 3;
 
 // ' Bird_Normal', 16x16px
 const unsigned char bitmap__Bird_Normal [] PROGMEM = {
@@ -127,24 +128,33 @@ void setup() {
     EEPROM[S3_HI_SCR_ADDR + 1] = 0;
   }
 
+
+	ADMUX = DEFAULT << 6 | 0b1110;      
+  ADCSRA = 1 << ADEN | 0b101;         
+  for (uint8_t i = 0; i < 8; i++) {   
+    ADCSRA |= 1 << ADSC;              
+    while (ADCSRA & (1 << ADSC));     
+  }
+
 }
 
 void loop() {
   
-	oled.clear();
-	oled.drawBitmap(19, 15, bitmap__FlappyBirdLogo, 90, 24);
-	oled.update();
-	while (1) {
+	static uint32_t LoopTimer = millis();
+	if (millis() - LoopTimer >= 1000 / Menu_FPS) {
+	
+		oled.clear();
+		oled.drawBitmap(19, 15, bitmap__FlappyBirdLogo, 90, 24);
 		oled.setCursorXY(25, 45);
 		oled.setScale(1);
 		oled.print("Press To Play");
+		batCheckDraw();
 		oled.update();
 		if (main_button.isClick()) {
 			MainMenu();
 		}
 
 	}
-
 }
 
 void MainMenu() {
@@ -199,4 +209,28 @@ void WaitingScreen() {
 	oled.clear(); oled.setCursor(54, 3); oled.print("1");
 	oled.update();
 	delay(800);
+
+	oled.clear(); oled.setCursor(54, 3); oled.print("0");
+	oled.update();
+}
+
+void batCheckDraw(void) {
+  static uint32_t measureTimer = millis() + 3500;  
+  static uint8_t batCharge = 0;                    
+
+  if (millis() - measureTimer >= 3000) {
+    measureTimer = millis();
+    ADCSRA |= 1 << ADSC;                
+    while (ADCSRA & (1 << ADSC));      
+    batCharge = constrain(map((INTERNAL_REF * 1024UL) / ADC, BATTERY_EMPTY, BATTERY_FULL, 0, 12), 0, 12);
+  }
+
+  oled.setCursorXY(110, 2);                             
+  oled.drawByte(0b00111100);                           
+  oled.drawByte(0b00111100);                            
+  oled.drawByte(0b11111111);                            
+  for (uint8_t i = 0; i < 12; i++) {                    
+    if (i < 12 - batCharge)oled.drawByte(0b10000001);  
+    else oled.drawByte(0b11111111);                     
+  } oled.drawByte(0b11111111);                          
 }

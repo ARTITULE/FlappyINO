@@ -64,7 +64,7 @@ void FBirdGame(int8_t EEPROM_ADDR , int8_t Difficulty) {
 
 
   while (1) {
-  
+	
 
     /*  ---------------- USER INPUT ----------------  */
 
@@ -185,7 +185,7 @@ void FBirdGame(int8_t EEPROM_ADDR , int8_t Difficulty) {
       drawTimer = millis();
       oled.clear();
 			oled.setScale(1);
-			oled.setCursorXY(0, 2); oled.print("Sc:"); oled.print(PipeCounter);
+			oled.setCursorXY(0, 2); oled.print("S:"); oled.print(PipeCounter);
 			if (SpeedIncreaseText) {
 				oled.setCursorXY(0, 55);
 				oled.print("+ Speed");
@@ -262,6 +262,7 @@ void FBirdGame(int8_t EEPROM_ADDR , int8_t Difficulty) {
 			}
 
       oled.drawBitmap(0, birdY, BirdFlapp ? bitmap__Bird_Flapped : bitmap__Bird_Normal, 16, 16);
+			batCheckDraw();
       oled.update();
     }
 
