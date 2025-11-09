@@ -231,7 +231,6 @@ void FBirdGame(int8_t EEPROM_ADDR , int8_t Difficulty) {
 				if(PipeCounter > BestScore){
 					EEPROM.put(EEPROM_ADDR, PipeCounter);
           BestScore = PipeCounter;
-					delay(500);
 					oled.clear();
 					oled.roundRect(0, 1, 127, 62, OLED_STROKE);
 					oled.setScale(2);
@@ -239,14 +238,12 @@ void FBirdGame(int8_t EEPROM_ADDR , int8_t Difficulty) {
 					oled.setCursor(4, 3); oled.print("  SCORE!  ");
 					oled.setCursor(40,5); oled.print(BestScore);
 					oled.update();
-					delay(500);
 					while(1){
 						main_button.tick();
 						if(main_button.click()) goto EndScreen;
 					}
 				}
 				EndScreen:
-				delay(500);
 				oled.clear();
 				oled.roundRect(0, 1, 127, 62, OLED_STROKE);
 				oled.setScale(2);
@@ -256,7 +253,6 @@ void FBirdGame(int8_t EEPROM_ADDR , int8_t Difficulty) {
 				oled.setCursor(7, 4); oled.print("Score : "); oled.print(PipeCounter);
 				oled.setCursor(7, 6); oled.print("Best Score : "); oled.print(BestScore);
 				oled.update();
-				delay(500);
 				while (1) {
 					main_button.tick();
 
