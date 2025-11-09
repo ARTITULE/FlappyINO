@@ -20,13 +20,13 @@
 
 
 #include <GyverOLED.h>
-#include <GyverButton.h>
+#include <EncButton.h>
 #include <EEPROM.h>
 #include <SPI.h>
 
 
 GyverOLED <SSD1306_128x64, OLED_BUFFER, OLED_SPI, OLED_CS, OLED_DC, OLED_RST> oled;
-GButton main_button(Button_Pin);
+Button main_button(3);
 
 int8_t Save_Amount = 3;
 
@@ -112,8 +112,6 @@ const uint8_t bitmap__Top_pipe[] PROGMEM = {
 void setup() {
   
 	Serial.begin(9600);
-	main_button.setTickMode(AUTO);
-	main_button.setStepTimeout(500);
 
   oled.init();
   oled.clear();
@@ -139,37 +137,45 @@ void setup() {
 }
 
 void loop() {
-  
-	static uint32_t LoopTimer = millis();
-	if (millis() - LoopTimer >= 1000 / Menu_FPS) {
 	
-		oled.clear();
-		oled.drawBitmap(19, 15, bitmap__FlappyBirdLogo, 90, 24);
-		oled.setCursorXY(25, 45);
-		oled.setScale(1);
-		oled.print("Press To Play");
-		batCheckDraw();
-		oled.update();
-		if (main_button.isClick()) {
+	while (1) {
+
+		main_button.tick();
+		static uint32_t LoopTimer = millis();
+
+		if (main_button.click()) {
 			MainMenu();
 		}
 
+		if (millis() - LoopTimer >= 1000 / Menu_FPS) {
+	
+			oled.clear();
+			oled.drawBitmap(19, 15, bitmap__FlappyBirdLogo, 90, 24);
+			oled.setCursorXY(25, 45);
+			oled.setScale(1);
+			oled.print("Press To Play");
+			batCheckDraw();
+			oled.update();
+
+		}
 	}
+
 }
 
 void MainMenu() {
 	
 	while (1) {
+ 		main_button.tick();
 		static uint8_t MenuPointer = 0;
 
-		if (main_button.isClick()) {
+		if (main_button.click()) {
 			MenuPointer += 3;
 			if (MenuPointer >= Save_Amount * 3) {
 			MenuPointer = 0;
 			}
 		}
 
-		if (main_button.isHold()) {
+		if (main_button.hold()) {
 			switch (MenuPointer) {
 				case 0: FBirdGame(S1_HI_SCR_ADDR, 0); break;
 				case 3: FBirdGame(S2_HI_SCR_ADDR, 1); break;
@@ -200,15 +206,15 @@ void WaitingScreen() {
 	oled.clear(); oled.setScale(4);
 	oled.setCursor(54, 3); oled.print("3");
 	oled.update();
-	delay(800);
+	delay(400);
 
 	oled.clear(); oled.setCursor(54, 3); oled.print("2");
 	oled.update();
-	delay(800);
+	delay(400);
 
 	oled.clear(); oled.setCursor(54, 3); oled.print("1");
 	oled.update();
-	delay(800);
+	delay(400);
 
 	oled.clear(); oled.setCursor(54, 3); oled.print("0");
 	oled.update();

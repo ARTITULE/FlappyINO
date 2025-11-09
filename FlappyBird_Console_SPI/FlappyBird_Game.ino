@@ -64,11 +64,12 @@ void FBirdGame(int8_t EEPROM_ADDR , int8_t Difficulty) {
 
 
   while (1) {
-	
+		
 
     /*  ---------------- USER INPUT ----------------  */
+		main_button.tick();
 
-		if (main_button.isClick()){
+		if (main_button.click()){
 			BirdU = -0.8;
 			birdY -= 2;
 			NumOfFlappedFrames = 2000;
@@ -240,7 +241,8 @@ void FBirdGame(int8_t EEPROM_ADDR , int8_t Difficulty) {
 					oled.update();
 					delay(500);
 					while(1){
-						if(main_button.isClick()) goto EndScreen;
+						main_button.tick();
+						if(main_button.click()) goto EndScreen;
 					}
 				}
 				EndScreen:
@@ -256,8 +258,15 @@ void FBirdGame(int8_t EEPROM_ADDR , int8_t Difficulty) {
 				oled.update();
 				delay(500);
 				while (1) {
-					if (main_button.isClick()) goto StartBirdGame;
-          if (main_button.isHold()) loop();
+					main_button.tick();
+
+					if (main_button.click()) {
+						goto StartBirdGame;
+					} 
+
+          if (main_button.hold()) { 
+						 loop();
+					}
 				}
 			}
 
