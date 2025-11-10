@@ -1,7 +1,5 @@
 #define BirdGroundPlane 56
 
-
-
 #define Low_pipe_HIGH 25 
 #define Low_pipe_LOW 60 
 #define Middle_pipe_HIGH 15 
@@ -25,19 +23,21 @@ void FBirdGame(int8_t EEPROM_ADDR , int8_t Difficulty) {
 	float BGravity = 0.0;
 	int birdY = 20;
 	int NumOfFlappedFrames = 0;
+
 	bool BirdFlapp = false;
 	bool GameOVER = false;
-	uint16_t PipeCounter = 0;
-	uint16_t BestScore = 0;
 	bool PipeIsDeadly = false;
 	bool SpeedIncreaseText = false;
+	bool GravityON = false;
+
 	int8_t SpeedStep = 10;
 	int8_t GameSpeed = 30;
 	int8_t EnemyStep = 1;
 	int8_t GspeedInc = 1;
 	int8_t increasePipeCounter = 0;
 
-
+	uint16_t PipeCounter = 0;
+	uint16_t BestScore = 0;
 
 	int8_t oldPipePos = 128;
 	int8_t oldPipeType = 0;
@@ -49,7 +49,7 @@ void FBirdGame(int8_t EEPROM_ADDR , int8_t Difficulty) {
 	int8_t thirdBackgroundPos = 128;
 
 	switch (Difficulty) {
-		case 0: GameSpeed = 30; EnemyStep = 1; GspeedInc = 3; BGravity = 0.060f;
+		case 0: GameSpeed = 25; EnemyStep = 1; GspeedInc = 3; BGravity = 0.060f;
 		break;
 
 		case 1: GameSpeed = 20; EnemyStep = 2; GspeedInc = 2; BGravity = 0.080f;
@@ -72,7 +72,8 @@ void FBirdGame(int8_t EEPROM_ADDR , int8_t Difficulty) {
 		if (main_button.click()){
 			BirdU = -0.8;
 			birdY -= 2;
-			NumOfFlappedFrames = 2000;
+			NumOfFlappedFrames = 1500;
+			if (GravityON == false) GravityON = true;
 
 		}
 
@@ -159,18 +160,17 @@ void FBirdGame(int8_t EEPROM_ADDR , int8_t Difficulty) {
 				BirdFlapp = false;
 			}
 		}
+		
+		if (GravityON) {
+			static uint32_t BridGravityTimer = millis();
+			if(millis() - BridGravityTimer >= 10){
+				BridGravityTimer = millis();
 
-		static uint32_t BridGravityTimer = millis();
-		if(millis() - BridGravityTimer >= 10){
-			BridGravityTimer = millis();
-
-			BirdU += (float)BGravity;
-			birdY += (float)BirdU;
-
-
-
+				BirdU += (float)BGravity;
+				birdY += (float)BirdU;
+				
+			}
 		}
-
 
 
 
