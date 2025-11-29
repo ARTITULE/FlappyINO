@@ -1,4 +1,12 @@
+/*
 
+This is a projaect licenced under the MIT Licence 
+Project by ARTITULE
+
+More details can be found on the GitHub page:
+https://github.com/ARTITULE/FlappyINO
+
+*/
 #define OLED_RST 8
 #define OLED_DC 9
 #define OLED_CS 10
