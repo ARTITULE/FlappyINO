@@ -21,6 +21,11 @@ There is also a PCB based version that is smaller and more power efficient enabl
 - **Atmega328P Chip**
 - **A 16Mh SMD Crystal Oscillator** (If you are using a Atmega328P that is clocked at 16Mh)
 - **6mmx6mm SMD Pushbutton**
+- **TP4056 Charging module** (if you are using a small battery you should change the ISET resitor to a 10K one)
+- **A Small LI-Po Battery** (Under 40mmx20mmx6mm )
+- **A Small 2 Position Switch**
+- **3 0402 100nf Ceramic Capasitors** (Not actually needed just improve stability)
+- **2 0402 10k Resistors** (Also not technically needed)
 
 
 ### Typical Display Pinout
@@ -63,5 +68,16 @@ There is also a PCB based version that is smaller and more power efficient enabl
 3. Open any one of the  `.ino` files.
 4. Adjust pin definitions to match your wiring if you need to.
 5. Upload the sketch to your Arduino.
+6. For the PCB you are going to need the USB-ASP and the drivers
+7. If you are using a custom Atmega328p Core then you can run the microcontroller with 8Mh internal clock then the 16Mh crystal is not needed.
+
+## Disclaimer
+1. For the PCB version the microcontroller clocked at 16Mh might not want to work with the small voltage when the battery is discharged. In that case running it at a 8Mh clock is advised.
+
+
+## Contributing
+
+Pull requests are welcome.
+
 
 
