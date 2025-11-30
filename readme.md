@@ -23,7 +23,7 @@ There is also a PCB based version that is smaller and more power efficient enabl
 - **6mmx6mm SMD Pushbutton**
 - **TP4056 Charging module** (if you are using a small battery you should change the ISET resitor to a 10K one)
 - **A Small LI-Po Battery** (Under 40mmx20mmx6mm )
-- **A Small 2 Position Switch**
+- **A Small 2 Position 6 Pin Switch**
 - **3 0402 100nf Ceramic Capasitors** (Not actually needed just improve stability)
 - **2 0402 10k Resistors** (Also not technically needed)
 
