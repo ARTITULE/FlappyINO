@@ -4,6 +4,8 @@ This project is a simple handheld Flappy Bird–inspired game built using an Ard
 
 There is also a PCB based version that is smaller and more power efficient enabling you to play on the go.
 
+Building the PCB version is advised as it is the smaller version and to use the 3D printed case.
+
 ## Features
 
 - Smooth side-scrolling graphics on a 7-pin SPI display
@@ -19,7 +21,11 @@ There is also a PCB based version that is smaller and more power efficient enabl
 - **Breadboard or custom PCB**
 - **Power source** (USB or battery)
 
-## PCB Hardware Requirements
+## PCB
+
+![Pcb_Screenshot](Pic/Pcb_Screenshot.png)
+
+### PCB Hardware Requirements
 
 - **Atmega328P Chip**
 - **A 16Mh SMD Crystal Oscillator** (If you are using a Atmega328P that is clocked at 16Mh)
@@ -29,6 +35,12 @@ There is also a PCB based version that is smaller and more power efficient enabl
 - **A Small 2 Position 6 Pin Switch**
 - **3 0402 100nf Ceramic Capasitors** (Not actually needed just improve stability)
 - **2 0402 10k Resistors** (Also not technically needed)
+
+### PCB Schematic
+
+For anyone interested here is the schematic.
+
+![Pcb_Schematic](Pic/Schematic.svg)
 
 ### Typical Display Pinout
 
@@ -42,10 +54,20 @@ There is also a PCB based version that is smaller and more power efficient enabl
 | DC          | Data/Command    | D9                 |
 | CS          | Chip Select     | D10                |
 
+### Button Pinout
+
 | PushButton Pin | Connects To  |
 |----------------|--------------|
 | Pin 1          | GND          |
 | Pin 2          | D3           |
+
+## 3D Printed Case
+
+The PCB is made to be used with a 3D printed case. The case files can be found in the '3D Files' folder.
+
+![3D_Printed_Case](Pic/Fusion360_Image.png)
+
+The case is made to be assembled with 4 M3 Heat-set inserts. A battery under 40mm in length, 19mm in width and 5mm in height is preferred.
 
 ## Software Requirements
 
