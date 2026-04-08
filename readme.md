@@ -6,6 +6,10 @@ There is also a PCB based version that is smaller and more power efficient enabl
 
 Building the PCB version is advised as it is the smaller version and to use the 3D printed case.
 
+See the build video:
+
+[![Video Title](https://img.youtube.com/vi/vfzLBbyyz0U/maxresdefault.jpg)](https://youtu.be/vfzLBbyyz0U)
+
 ## Features
 
 - Smooth side-scrolling graphics on a 7-pin SPI display
