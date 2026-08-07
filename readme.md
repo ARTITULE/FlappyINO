@@ -75,9 +75,7 @@ The case is made to be assembled with 4 M3 Heat-set inserts. A battery under 40m
 
 ## Software Requirements
 
-- Arduino IDE
-- Display library and button library (Both can be found in the Libraries folder)
-- The code (can be found in the FlappyBird_Console_SPI folder)
+- Visual Studio Code with PlatformIO installed.(All the necessary libraries are going to be automatically downloaded by PIO upon compilation)
 
 ## Game Mechanics
 
