@@ -1,6 +1,18 @@
 
 #include "functions.h"
 
+
+void printCentered(const char* text, uint8_t row, uint8_t scale, GyverOLED<SSD1306_128x64, OLED_BUFFER, OLED_SPI, OLED_CS, OLED_DC, OLED_RST> &oled) {
+  uint8_t textWidth = strlen(text) * 6 * scale;
+  int x = (128 - textWidth) / 2;
+  if (x < 0) x = 0;
+ 
+  oled.setScale(scale);
+  oled.setCursor(x, row);
+  oled.print(text);
+}
+
+
 void WaitingScreen(GyverOLED<SSD1306_128x64, OLED_BUFFER, OLED_SPI, OLED_CS, OLED_DC, OLED_RST> &oled) {
     oled.clear();
     oled.setScale(4);

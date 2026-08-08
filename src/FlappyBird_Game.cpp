@@ -40,6 +40,7 @@ StartBirdGame:
     bool PipeIsDeadly = false;
     bool SpeedIncreaseText = false;
     bool GravityON = false;
+    bool PauseClick = false;
 
     int8_t SpeedStep = 10;
     int8_t GameSpeed = 30;
@@ -58,6 +59,7 @@ StartBirdGame:
     int8_t firstBackgroundPos = 64;
     int8_t secondBackgroundPos = 64;
     int8_t thirdBackgroundPos = 128;
+    uint8_t backgroundScrollX = 0; 
 
     switch (Difficulty) {
     case 0:
@@ -87,7 +89,10 @@ StartBirdGame:
     while (1) {
 
         /*  ---------------- USER INPUT ----------------  */
-        main_button.tick();
+        if (!PauseClick){
+            main_button.tick();
+        }
+        
 
         if (main_button.click()) {
             BirdU = -0.8;
@@ -170,6 +175,7 @@ StartBirdGame:
             }
         }
 
+        /*
         static uint32_t BackgroundTimer = millis();
         if (millis() - BackgroundTimer >= 25) {
             BackgroundTimer = millis();
@@ -185,6 +191,12 @@ StartBirdGame:
             if (firstBackgroundPos >= -64) {
                 firstBackgroundPos -= 1;
             }
+        }*/
+
+        static uint32_t BackgroundTimer = millis();
+        if (millis() - BackgroundTimer >= 25) {
+            BackgroundTimer = millis();
+            backgroundScrollX = (backgroundScrollX + 1) % 64;
         }
 
         static uint32_t FlapTimer = millis();
@@ -252,9 +264,21 @@ StartBirdGame:
                 break;
             }
 
-            oled.drawBitmap(firstBackgroundPos, 0, bitmap__Background, 64, 64);
-            oled.drawBitmap(secondBackgroundPos, 0, bitmap__Background, 64, 64);
-            oled.drawBitmap(thirdBackgroundPos, 0, bitmap__Background, 64, 64);
+            //oled.drawBitmap(firstBackgroundPos, 0, bitmap__Background, 64, 64);
+            //oled.drawBitmap(secondBackgroundPos, 0, bitmap__Background, 64, 64);
+            //oled.drawBitmap(thirdBackgroundPos, 0, bitmap__Background, 64, 64);
+
+            for (uint8_t i = 0; i < NUM_STARS; i++) {
+                uint8_t sx = pgm_read_byte(&StarX[i]);
+                uint8_t sy = pgm_read_byte(&StarY[i]);
+                // period is 64px, so draw two copies to cover the 128px screen width
+                for (int16_t tile = 0; tile < 128; tile += 64) {
+                    int16_t x = ((int16_t)sx - backgroundScrollX + 64) % 64 + tile;
+                    if (x >= 0 && x < 128) {
+                        oled.dot(x, sy, 1);  // check exact pixel-set method name in GyverOLED — may be .dot(), .point(), or .setPixel()
+                    }
+                }
+            }
 
             if (birdY >= BirdGroundPlane or birdY <= -8) {
                 GameOVER = true;
@@ -266,21 +290,25 @@ StartBirdGame:
             }
 
             if (GameOVER) {
+                PauseClick = true;
                 WaitingScreen(oled);
                 if (PipeCounter > BestScore) {
                     EEPROM.put(EEPROM_ADDR, PipeCounter);
                     BestScore = PipeCounter;
                     oled.clear();
-                    oled.roundRect(0, 1, 127, 62, OLED_STROKE);
-                    oled.setScale(2);
-                    oled.setCursor(4, 1);
-                    oled.print(" NEW HIGH ");
-                    oled.setCursor(4, 3);
-                    oled.print("  SCORE!  ");
-                    oled.setCursor(40, 5);
-                    oled.print(BestScore);
+                    printCentered("NEW HIGH", 1, 2, oled);
+                    printCentered("SCORE!", 3, 2, oled);
+                    printCentered(String(BestScore).c_str(), 5, 3, oled);
+                    oled.roundRect(0, 1, 127, 63, OLED_STROKE);
                     oled.update();
                     while (1) {
+                        if (PauseClick) {
+                            PauseClick = false;
+                            for (int8_t i = 0; i < 10; i++){
+                                main_button.tick();
+        
+                            }
+                        }
                         main_button.tick();
                         if (main_button.click())
                             goto EndScreen;
@@ -288,10 +316,8 @@ StartBirdGame:
                 }
             EndScreen:
                 oled.clear();
-                oled.roundRect(0, 1, 127, 62, OLED_STROKE);
-                oled.setScale(2);
-                oled.setCursor(7, 1);
-                oled.print(F("GAME OVER!"));
+                oled.roundRect(0, 1, 127, 63, OLED_STROKE);
+                printCentered("GAME OVER", 1, 2, oled);
                 oled.setScale(1);
                 oled.setCursor(7, 4);
                 oled.print("Score : ");
@@ -301,8 +327,15 @@ StartBirdGame:
                 oled.print(BestScore);
                 oled.update();
                 while (1) {
+                    if (PauseClick) {
+                        PauseClick = false;
+                        for (int8_t i = 0; i < 10; i++){
+                            main_button.tick();
+    
+                        }
+                    }
+                    
                     main_button.tick();
-
                     if (main_button.click()) {
                         goto StartBirdGame;
                     }
