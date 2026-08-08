@@ -14,6 +14,8 @@ https://github.com/ARTITULE/FlappyINO
 #define S2_HI_SCR_ADDR 3
 #define S3_HI_SCR_ADDR 5
 
+#define OLED_SPI_SPEED 4000000ul
+
 #include <Arduino.h>
 #include "bitmap.h"
 #include "FlappyBird_Game.h"
