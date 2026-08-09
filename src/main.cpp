@@ -34,6 +34,7 @@ void setup() {
 
     oled.init();
     oled.clear();
+    oled.setContrast(255);
 
 
     if (EEPROM[KEY_EE_ADDR] != EEPROM_KEY) {
@@ -85,29 +86,29 @@ void MainMenu() {
 
 
         static uint32_t MenuDrawTimer = millis();
+        static bool drawHold = true;
+        static uint8_t drawCounter = 0;
         if (millis() - MenuDrawTimer >= 1000 / MENU_FPS) {
             MenuDrawTimer = millis();
-            oled.clear();
-            oled.setScale(1);
-            oled.setCursor(10, 0);
-            oled.print(F("Easy (Mars)"));
-            oled.setCursor(10, 1);
-            oled.print(F("High Score : "));
-            oled.print(EEPROM.read(S1_HI_SCR_ADDR));
-            oled.setCursor(10, 3);
-            oled.print(F("Medium (Earth)"));
-            oled.setCursor(10, 4);
-            oled.print(F("High Score : "));
-            oled.print(EEPROM.read(S2_HI_SCR_ADDR));
-            oled.setCursor(10, 6);
-            oled.print(F("Hard (Jupiter)"));
-            oled.setCursor(10, 7);
-            oled.print(F("High Score : "));
-            oled.print(EEPROM.read(S3_HI_SCR_ADDR));
-            oled.setScale(2);
-            oled.setCursor(118, MenuPointer);
-            oled.print("<");
-            oled.update();
+            drawCounter ++;
+
+            if (drawCounter >= 20) {
+                drawCounter = 0;
+                drawHold = !drawHold;
+            }
+
+
+            switch (MenuPointer) {
+            case 0:
+                drawMainMenuCard(S1_HI_SCR_ADDR, "Moon", "Steady", bitmap_Moon, drawHold, 0, oled);
+                break;
+            case 3:
+                drawMainMenuCard(S2_HI_SCR_ADDR, "Earth", "Rush", bitmap_Earth, drawHold, 1, oled);
+                break;
+            case 6:
+                drawMainMenuCard(S3_HI_SCR_ADDR, "Saturn", "Frenzy", bitmap_Saturn, drawHold, 2, oled);
+                break;
+            }
         }
     }
 }
@@ -124,6 +125,8 @@ void loop() {
     if (millis() - LoopTimer >= 1000 / MENU_FPS) {
 
         oled.clear();
+        oled.drawBitmap(0, 0, bitmap__Background, 64, 64);
+        oled.drawBitmap(63, 0, bitmap__Background, 64, 64);
         oled.drawBitmap(19, 15, bitmap__FlappyBirdLogo, 90, 24);
         oled.setCursorXY(25, 45);
         oled.setScale(1);
