@@ -56,9 +56,8 @@ StartBirdGame:
     int8_t newPipePos = 128;
     int8_t newPipeType = random(0, 3);
 
-    int8_t firstBackgroundPos = 64;
-    int8_t secondBackgroundPos = 64;
-    int8_t thirdBackgroundPos = 128;
+    int8_t firstBackgroundPos = 0;
+    int8_t secondBackgroundPos = 128;
     uint8_t backgroundScrollX = 0; 
 
     switch (Difficulty) {
@@ -194,9 +193,17 @@ StartBirdGame:
         }*/
 
         static uint32_t BackgroundTimer = millis();
-        if (millis() - BackgroundTimer >= 25) {
+        if (millis() - BackgroundTimer >= 15) {
             BackgroundTimer = millis();
             backgroundScrollX = (backgroundScrollX + 1) % 64;
+            secondBackgroundPos -= 1;
+            if (secondBackgroundPos <= 0) {
+                firstBackgroundPos = secondBackgroundPos;
+                secondBackgroundPos = 128;
+            }
+            else {
+                firstBackgroundPos -= 1;
+            }
         }
 
         static uint32_t FlapTimer = millis();
@@ -228,11 +235,16 @@ StartBirdGame:
 
             drawTimer = millis();
             oled.clear();
+            oled.drawBitmap(firstBackgroundPos, 47, bitmap_BackgroundMoon, 128, 16);
+            if (secondBackgroundPos != 128) {
+                oled.drawBitmap(secondBackgroundPos, 47, bitmap_BackgroundMoon, 128, 16);
+            }
             oled.setScale(1);
             oled.setCursorXY(0, 2);
             oled.print("S:");
             oled.print(PipeCounter);
             if (SpeedIncreaseText) {
+                oled.clear(0, 55, 42, 63);
                 oled.setCursorXY(0, 55);
                 oled.print("+ Speed");
                 SpeedIncreaseText = false;
@@ -242,24 +254,36 @@ StartBirdGame:
 
             switch (oldPipeType) {
             case 0:
+                oled.clear(oldPipePos, 63 - 6, oldPipePos + 16, 63 - 1);
+                oled.clear(oldPipePos + 3, 63, oldPipePos + 13, 63);
                 oled.drawBitmap(oldPipePos, 0, bitmap__Low_pipe, 16, 64);
                 break;
             case 1:
+                oled.clear(oldPipePos, 63 - 15, oldPipePos + 16, 63 - 10);
+                oled.clear(oldPipePos + 3, 63 - 9, oldPipePos + 13, 63);
                 oled.drawBitmap(oldPipePos, 0, bitmap__Middle_pipe, 16, 64);
                 break;
             case 2:
+                oled.clear(oldPipePos, 63 - 26, oldPipePos + 16, 63 - 21);
+                oled.clear(oldPipePos + 3, 63 - 20, oldPipePos + 13, 63);
                 oled.drawBitmap(oldPipePos, 0, bitmap__Top_pipe, 16, 64);
                 break;
             }
 
             switch (newPipeType) {
             case 0:
+                oled.clear(newPipePos, 63 - 6, newPipePos + 16, 63 - 1);
+                oled.clear(newPipePos + 3, 63, newPipePos + 13, 63);
                 oled.drawBitmap(newPipePos, 0, bitmap__Low_pipe, 16, 64);
                 break;
             case 1:
+                oled.clear(newPipePos, 63 - 15, newPipePos + 16, 63 - 10);
+                oled.clear(newPipePos + 3, 63 - 9, newPipePos + 13, 63);
                 oled.drawBitmap(newPipePos, 0, bitmap__Middle_pipe, 16, 64);
                 break;
             case 2:
+                oled.clear(newPipePos, 63 - 26, newPipePos + 16, 63 - 21);
+                oled.clear(newPipePos + 3, 63 - 20, newPipePos + 13, 63);
                 oled.drawBitmap(newPipePos, 0, bitmap__Top_pipe, 16, 64);
                 break;
             }
@@ -296,9 +320,9 @@ StartBirdGame:
                     EEPROM.put(EEPROM_ADDR, PipeCounter);
                     BestScore = PipeCounter;
                     oled.clear();
-                    printCentered("NEW HIGH", 1, 2, oled);
-                    printCentered("SCORE!", 3, 2, oled);
-                    printCentered(String(BestScore).c_str(), 5, 3, oled);
+                    printCentered("NEW HIGH", 1 * 8, 2, oled);
+                    printCentered("SCORE!", 3 * 8, 2, oled);
+                    printCentered(String(BestScore).c_str(), 5 * 8, 3, oled);
                     oled.roundRect(0, 1, 127, 63, OLED_STROKE);
                     oled.update();
                     while (1) {
@@ -317,7 +341,7 @@ StartBirdGame:
             EndScreen:
                 oled.clear();
                 oled.roundRect(0, 1, 127, 63, OLED_STROKE);
-                printCentered("GAME OVER", 1, 2, oled);
+                printCentered("GAME OVER", 1 * 8, 2, oled);
                 oled.setScale(1);
                 oled.setCursor(7, 4);
                 oled.print("Score : ");

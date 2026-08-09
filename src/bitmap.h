@@ -10,6 +10,7 @@ extern const uint8_t StarY[NUM_STARS] PROGMEM;
 extern const unsigned char bitmap__Bird_Normal [] PROGMEM;
 extern const unsigned char bitmap__Bird_Flapped [] PROGMEM;
 extern const uint8_t bitmap__Background[] PROGMEM;
+extern const uint8_t bitmap_BackgroundMoon[] PROGMEM;
 extern const uint8_t bitmap__FlappyBirdLogo[] PROGMEM;
 extern const uint8_t bitmap__Low_pipe[] PROGMEM;
 extern const uint8_t bitmap__Middle_pipe[] PROGMEM;
