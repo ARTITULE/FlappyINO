@@ -24,7 +24,7 @@ int8_t Pipe_Collision_Points[2][3] = {
         Top_pipe_LOW,
     }};
 
-void FBirdGame(int8_t EEPROM_ADDR, int8_t Difficulty, GyverOLED<SSD1306_128x64, OLED_BUFFER, OLED_SPI, OLED_CS, OLED_DC, OLED_RST> &oled, Button &main_button) {
+void FBirdGame(int8_t EEPROM_ADDR, int8_t Difficulty, int8_t setting1, int8_t setting2, GyverOLED<SSD1306_128x64, OLED_BUFFER, OLED_SPI, OLED_CS, OLED_DC, OLED_RST> &oled, Button &main_button) {
 
 StartBirdGame:
 
@@ -41,6 +41,8 @@ StartBirdGame:
     bool SpeedIncreaseText = false;
     bool GravityON = false;
     bool PauseClick = false;
+    bool showAnimation = setting1;
+    bool showBackground = setting2;
 
     int8_t SpeedStep = 10;
     int8_t GameSpeed = 30;
@@ -235,10 +237,13 @@ StartBirdGame:
 
             drawTimer = millis();
             oled.clear();
-            oled.drawBitmap(firstBackgroundPos, 47, bitmap_BackgroundMoon, 128, 16);
-            if (secondBackgroundPos != 128) {
-                oled.drawBitmap(secondBackgroundPos, 47, bitmap_BackgroundMoon, 128, 16);
+            if (setting2) {
+                oled.drawBitmap(firstBackgroundPos, 47, bitmap_BackgroundMoon, 128, 16);
+                if (secondBackgroundPos != 128) {
+                    oled.drawBitmap(secondBackgroundPos, 47, bitmap_BackgroundMoon, 128, 16);
+                }
             }
+     
             oled.setScale(1);
             oled.setCursorXY(0, 2);
             oled.print("S:");

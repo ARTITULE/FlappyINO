@@ -8,11 +8,12 @@ https://github.com/ARTITULE/FlappyINO
 
 */
 
-#define EEPROM_KEY 0xB2
+#define EEPROM_KEY 0xA2
 #define KEY_EE_ADDR 0
 #define S1_HI_SCR_ADDR 1
 #define S2_HI_SCR_ADDR 3
 #define S3_HI_SCR_ADDR 5
+#define SETTINGS_ADDR 6
 
 #define OLED_SPI_SPEED 4000000ul
 
@@ -30,6 +31,11 @@ https://github.com/ARTITULE/FlappyINO
 GyverOLED<SSD1306_128x64, OLED_BUFFER, OLED_SPI, OLED_CS, OLED_DC, OLED_RST> oled;
 Button main_button(BUTTON_PIN);
 
+struct {
+    int8_t showAnimation = 1;
+    int8_t showBackground = 1;
+} settings;
+
 void setup() {
 
     oled.init();
@@ -45,17 +51,80 @@ void setup() {
         EEPROM[S2_HI_SCR_ADDR + 1] = 0;
         EEPROM[S3_HI_SCR_ADDR] = 0;
         EEPROM[S3_HI_SCR_ADDR + 1] = 0;
+        EEPROM.put(SETTINGS_ADDR, settings);
     }
 
     ADMUX = DEFAULT << 6 | 0b1110;
     ADCSRA = 1 << ADEN | 0b101;
     for (uint8_t i = 0; i < 8; i++) {
         ADCSRA |= 1 << ADSC;
-        while (ADCSRA & (1 << ADSC))
-            ;
+        while (ADCSRA & (1 << ADSC));
     }
 }
 
+void Settings() {
+    while (1) {
+        main_button.tick();
+        static uint8_t menuPointer = 0;
+
+        if (main_button.click()) {
+            menuPointer += 1;
+            if (menuPointer > SETTING_AMOUNT) {
+                menuPointer = 0;
+            }
+        }
+
+        if (main_button.hold()) {
+
+            switch (menuPointer) {
+
+            case 0:
+                settings.showAnimation += (settings.showAnimation == 0 ? 1 : -1);
+                EEPROM.put(SETTINGS_ADDR, settings);
+                break;
+            case 1:
+                settings.showBackground += (settings.showBackground == 0 ? 1 : -1);
+                EEPROM.put(SETTINGS_ADDR, settings);
+                break;
+            case SETTING_AMOUNT:
+                return;
+                break;
+            
+            default:
+                return;
+                break;
+            }
+        }
+
+        static uint32_t settingTimer;
+        if (millis() - settingTimer >= 1000 / MENU_FPS) {
+            settingTimer = millis();
+
+            EEPROM.get(SETTINGS_ADDR, settings);
+
+            oled.clear();
+            oled.roundRect(0, 0, 127, 63, OLED_STROKE);
+            printCentered("Settings", 1 * 8, 1, oled);
+            drawSettingBox(3, "Land. Anim. :", settings.showAnimation, "No", "Yes", "", oled);
+            drawSettingBox(4, "Show Backg. :", settings.showBackground, "No", "Yes", "", oled);
+            /*oled.setCursor(4, 3);
+            oled.print("Land. Anim. :");
+            oled.setCursor(88, 3);
+            if (settings.showAnimation == 0) {
+                oled.print("No");
+            }
+            else if (settings.showAnimation == 1) {
+                oled.print("Yes");
+            }*/
+            oled.setCursor(4, SETTING_AMOUNT + 3);
+            oled.print("Return (Hold)");
+            oled.setCursor(127 - 6, menuPointer + 3);
+            oled.print("<");
+            oled.update();
+        } 
+    }
+    
+}
 void MainMenu() {
 
     while (1) {
@@ -73,13 +142,13 @@ void MainMenu() {
 
             switch (MenuPointer) {
             case 0:
-                FBirdGame(S1_HI_SCR_ADDR, 0, oled, main_button);
+                FBirdGame(S1_HI_SCR_ADDR, 0, settings.showAnimation, settings.showBackground, oled, main_button);
                 return;
             case 3:
-                FBirdGame(S2_HI_SCR_ADDR, 1, oled, main_button);
+                FBirdGame(S2_HI_SCR_ADDR, 1, settings.showAnimation, settings.showBackground, oled, main_button);
                 return;
             case 6:
-                FBirdGame(S3_HI_SCR_ADDR, 2, oled, main_button);
+                FBirdGame(S3_HI_SCR_ADDR, 2, settings.showAnimation, settings.showBackground, oled, main_button);
                 return;
             }
         }
@@ -121,6 +190,9 @@ void loop() {
     if (main_button.click()) {
         MainMenu();
     }
+    else if (main_button.hold()) {
+        Settings();
+    }
 
     if (millis() - LoopTimer >= 1000 / MENU_FPS) {
 
@@ -131,6 +203,7 @@ void loop() {
         oled.setCursorXY(25, 45);
         oled.setScale(1);
         oled.print("Press To Play");
+        printCentered("Hold for Settings", 7 * 8, 1, oled);
         batCheckDraw(oled);
         oled.update();
     }

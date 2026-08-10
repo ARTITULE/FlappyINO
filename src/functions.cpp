@@ -73,6 +73,7 @@ void drawMainMenuCard(int8_t EEPROM_ADDR, const char* planet, const char* diffic
         { 23, 39 },
         { 43, 59 }
     };
+    uint16_t bestScore;
     oled.clear();
     oled.drawBitmap(55, 0, bitmap__Background, 64, 64);
     oled.setCursor(55, 1);
@@ -85,7 +86,7 @@ void drawMainMenuCard(int8_t EEPROM_ADDR, const char* planet, const char* diffic
     oled.setCursor(55,5);
     oled.print("Reach :");
     oled.setCursor(103, 5);
-    oled.print(EEPROM.read(EEPROM_ADDR));
+    oled.print(EEPROM.get(EEPROM_ADDR, bestScore));
     if (drawHold) {
         printCentered("Hold to descend", 54, 1, oled);
     }
@@ -99,4 +100,21 @@ void drawMainMenuCard(int8_t EEPROM_ADDR, const char* planet, const char* diffic
     oled.rect(0, rectDimensions[dimensionIndex][0], 1, rectDimensions[dimensionIndex][1], 1);
     oled.update();
 
+}
+
+void drawSettingBox(int8_t row, const char* settingName, int8_t setting, const char* opt1, const char* opt2, const char* opt3, GyverOLED<SSD1306_128x64, OLED_BUFFER, OLED_SPI, OLED_CS, OLED_DC, OLED_RST> &oled) {
+
+    oled.setCursor(4, row);
+    oled.print(settingName);
+    oled.setCursor((strlen(settingName) + 1) * 6 + 4, row);
+    if (setting == 0) {
+        oled.print(opt1);
+    }
+    else if (setting == 1) {
+        oled.print(opt2);
+    }
+    else if (setting == 2) {
+        oled.print(opt3);
+    }
+    
 }
