@@ -10,7 +10,7 @@
 #define MENU_FPS 30
 #define GAME_FPS 30
 #define SAVE_AMOUNT 3
-#define SETTING_AMOUNT 2
+#define SETTING_AMOUNT 3
 
 #define INTERNAL_REF 1075L
 #define BATTERY_FULL 4200

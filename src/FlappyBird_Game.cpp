@@ -24,7 +24,7 @@ int8_t Pipe_Collision_Points[2][3] = {
         Top_pipe_LOW,
     }};
 
-void FBirdGame(int8_t EEPROM_ADDR, int8_t Difficulty, int8_t setting1, int8_t setting2, GyverOLED<SSD1306_128x64, OLED_BUFFER, OLED_SPI, OLED_CS, OLED_DC, OLED_RST> &oled, Button &main_button) {
+void FBirdGame(int8_t EEPROM_ADDR, int8_t Difficulty, int8_t setting1, int8_t setting2, int8_t setting3, GyverOLED<SSD1306_128x64, OLED_BUFFER, OLED_SPI, OLED_CS, OLED_DC, OLED_RST> &oled, Button &main_button) {
 
 StartBirdGame:
 
@@ -43,6 +43,7 @@ StartBirdGame:
     bool PauseClick = false;
     bool showAnimation = setting1;
     bool showBackground = setting2;
+    int8_t showStars = setting3;
 
     int8_t SpeedStep = 10;
     int8_t GameSpeed = 30;
@@ -293,18 +294,17 @@ StartBirdGame:
                 break;
             }
 
-            //oled.drawBitmap(firstBackgroundPos, 0, bitmap__Background, 64, 64);
-            //oled.drawBitmap(secondBackgroundPos, 0, bitmap__Background, 64, 64);
-            //oled.drawBitmap(thirdBackgroundPos, 0, bitmap__Background, 64, 64);
+            if (showStars == 1) {
 
-            for (uint8_t i = 0; i < NUM_STARS; i++) {
-                uint8_t sx = pgm_read_byte(&StarX[i]);
-                uint8_t sy = pgm_read_byte(&StarY[i]);
-                // period is 64px, so draw two copies to cover the 128px screen width
-                for (int16_t tile = 0; tile < 128; tile += 64) {
-                    int16_t x = ((int16_t)sx - backgroundScrollX + 64) % 64 + tile;
-                    if (x >= 0 && x < 128) {
-                        oled.dot(x, sy, 1);  // check exact pixel-set method name in GyverOLED — may be .dot(), .point(), or .setPixel()
+                for (uint8_t i = 0; i < NUM_STARS; i++) {
+                    uint8_t sx = pgm_read_byte(&StarX[i]);
+                    uint8_t sy = pgm_read_byte(&StarY[i]);
+                    // period is 64px, so draw two copies to cover the 128px screen width
+                    for (int16_t tile = 0; tile < 128; tile += 64) {
+                        int16_t x = ((int16_t)sx - backgroundScrollX + 64) % 64 + tile;
+                        if (x >= 0 && x < 128) {
+                            oled.dot(x, sy, 1);  // check exact pixel-set method name in GyverOLED — may be .dot(), .point(), or .setPixel()
+                        }
                     }
                 }
             }

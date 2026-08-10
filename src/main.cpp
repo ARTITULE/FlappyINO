@@ -8,12 +8,12 @@ https://github.com/ARTITULE/FlappyINO
 
 */
 
-#define EEPROM_KEY 0xA2
+#define EEPROM_KEY 0xA1
 #define KEY_EE_ADDR 0
 #define S1_HI_SCR_ADDR 1
 #define S2_HI_SCR_ADDR 3
 #define S3_HI_SCR_ADDR 5
-#define SETTINGS_ADDR 6
+#define SETTINGS_ADDR 7
 
 #define OLED_SPI_SPEED 4000000ul
 
@@ -34,6 +34,7 @@ Button main_button(BUTTON_PIN);
 struct {
     int8_t showAnimation = 1;
     int8_t showBackground = 1;
+    int8_t showStarsBackground = 1;
 } settings;
 
 void setup() {
@@ -52,6 +53,9 @@ void setup() {
         EEPROM[S3_HI_SCR_ADDR] = 0;
         EEPROM[S3_HI_SCR_ADDR + 1] = 0;
         EEPROM.put(SETTINGS_ADDR, settings);
+    }
+    else {
+        EEPROM.get(SETTINGS_ADDR, settings);
     }
 
     ADMUX = DEFAULT << 6 | 0b1110;
@@ -86,6 +90,10 @@ void Settings() {
                 settings.showBackground += (settings.showBackground == 0 ? 1 : -1);
                 EEPROM.put(SETTINGS_ADDR, settings);
                 break;
+            case 2:
+                settings.showStarsBackground += (settings.showStarsBackground == 2 ? -2 : 1);
+                EEPROM.put(SETTINGS_ADDR, settings);
+                break;
             case SETTING_AMOUNT:
                 return;
                 break;
@@ -107,19 +115,16 @@ void Settings() {
             printCentered("Settings", 1 * 8, 1, oled);
             drawSettingBox(3, "Land. Anim. :", settings.showAnimation, "No", "Yes", "", oled);
             drawSettingBox(4, "Show Backg. :", settings.showBackground, "No", "Yes", "", oled);
-            /*oled.setCursor(4, 3);
-            oled.print("Land. Anim. :");
-            oled.setCursor(88, 3);
-            if (settings.showAnimation == 0) {
-                oled.print("No");
-            }
-            else if (settings.showAnimation == 1) {
-                oled.print("Yes");
-            }*/
+            drawSettingBox(5, "Show Stars :", settings.showStarsBackground, "No", "All", "Menu", oled);
             oled.setCursor(4, SETTING_AMOUNT + 3);
             oled.print("Return (Hold)");
             oled.setCursor(127 - 6, menuPointer + 3);
             oled.print("<");
+            if (settings.showStarsBackground == 1 || settings.showStarsBackground == 2) {
+
+                oled.drawBitmap(0, 0, bitmap__Background, 64, 64);
+                oled.drawBitmap(63, 0, bitmap__Background, 64, 64);
+            }
             oled.update();
         } 
     }
@@ -142,13 +147,13 @@ void MainMenu() {
 
             switch (MenuPointer) {
             case 0:
-                FBirdGame(S1_HI_SCR_ADDR, 0, settings.showAnimation, settings.showBackground, oled, main_button);
+                FBirdGame(S1_HI_SCR_ADDR, 0, settings.showAnimation, settings.showBackground, settings.showStarsBackground,oled, main_button);
                 return;
             case 3:
-                FBirdGame(S2_HI_SCR_ADDR, 1, settings.showAnimation, settings.showBackground, oled, main_button);
+                FBirdGame(S2_HI_SCR_ADDR, 1, settings.showAnimation, settings.showBackground, settings.showStarsBackground, oled, main_button);
                 return;
             case 6:
-                FBirdGame(S3_HI_SCR_ADDR, 2, settings.showAnimation, settings.showBackground, oled, main_button);
+                FBirdGame(S3_HI_SCR_ADDR, 2, settings.showAnimation, settings.showBackground, settings.showStarsBackground, oled, main_button);
                 return;
             }
         }
@@ -197,8 +202,10 @@ void loop() {
     if (millis() - LoopTimer >= 1000 / MENU_FPS) {
 
         oled.clear();
-        oled.drawBitmap(0, 0, bitmap__Background, 64, 64);
-        oled.drawBitmap(63, 0, bitmap__Background, 64, 64);
+        if (settings.showStarsBackground == 1 || settings.showStarsBackground == 2) {
+            oled.drawBitmap(0, 0, bitmap__Background, 64, 64);
+            oled.drawBitmap(63, 0, bitmap__Background, 64, 64);
+        }
         oled.drawBitmap(19, 15, bitmap__FlappyBirdLogo, 90, 24);
         oled.setCursorXY(25, 45);
         oled.setScale(1);
