@@ -16,4 +16,6 @@
 #define BATTERY_FULL 4200
 #define BATTERY_EMPTY 2900
 
+#define GAME_COMPLETE_SCORE 10
+
 #endif

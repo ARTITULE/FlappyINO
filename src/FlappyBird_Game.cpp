@@ -24,7 +24,7 @@ int8_t Pipe_Collision_Points[2][3] = {
         Top_pipe_LOW,
     }};
 
-void FBirdGame(int8_t EEPROM_ADDR, int8_t Difficulty, int8_t setting1, int8_t setting2, int8_t setting3, GyverOLED<SSD1306_128x64, OLED_BUFFER, OLED_SPI, OLED_CS, OLED_DC, OLED_RST> &oled, Button &main_button) {
+void FBirdGame(int8_t EEPROM_ADDR, int8_t Difficulty, int8_t setting1, int8_t setting2, int8_t setting3, int16_t game_complete_score, GyverOLED<SSD1306_128x64, OLED_BUFFER, OLED_SPI, OLED_CS, OLED_DC, OLED_RST> &oled, Button &main_button) {
 
 StartBirdGame:
 
@@ -41,6 +41,7 @@ StartBirdGame:
     bool SpeedIncreaseText = false;
     bool GravityON = false;
     bool PauseClick = false;
+    bool endless = false;
     bool showAnimation = setting1;
     bool showBackground = setting2;
     int8_t showStars = setting3;
@@ -53,6 +54,7 @@ StartBirdGame:
 
     int16_t PipeCounter = 0;
     int16_t BestScore = 0;
+    int16_t gameCompleteScore = game_complete_score;
 
     int8_t oldPipePos = 128;
     int8_t oldPipeType = 0;
@@ -63,12 +65,17 @@ StartBirdGame:
     int8_t secondBackgroundPos = 128;
     uint8_t backgroundScrollX = 0; 
 
+    startEndless:
+
+    const char* difficulty;
+
     switch (Difficulty) {
     case 0:
         GameSpeed = 25;
         EnemyStep = 1;
         GspeedInc = 3;
         BGravity = 0.060f;
+        difficulty = "STEADY MODE";
         break;
 
     case 1:
@@ -76,6 +83,7 @@ StartBirdGame:
         EnemyStep = 2;
         GspeedInc = 2;
         BGravity = 0.080f;
+        difficulty = "RUSH MODE";
         break;
 
     case 2:
@@ -83,6 +91,7 @@ StartBirdGame:
         EnemyStep = 2;
         GspeedInc = 1;
         BGravity = 0.100f;
+        difficulty = "FRENZY MODE";
         break;
     }
 
@@ -177,23 +186,7 @@ StartBirdGame:
             }
         }
 
-        /*
-        static uint32_t BackgroundTimer = millis();
-        if (millis() - BackgroundTimer >= 25) {
-            BackgroundTimer = millis();
-            thirdBackgroundPos -= 1;
-            if (thirdBackgroundPos <= 64) {
-                secondBackgroundPos = thirdBackgroundPos;
-                thirdBackgroundPos = 128;
-            }
-            secondBackgroundPos -= 1;
-            if (secondBackgroundPos <= 0) {
-                firstBackgroundPos = secondBackgroundPos;
-            }
-            if (firstBackgroundPos >= -64) {
-                firstBackgroundPos -= 1;
-            }
-        }*/
+
 
         static uint32_t BackgroundTimer = millis();
         if (millis() - BackgroundTimer >= 15) {
@@ -260,36 +253,48 @@ StartBirdGame:
 
             switch (oldPipeType) {
             case 0:
-                oled.clear(oldPipePos, 63 - 6, oldPipePos + 16, 63 - 1);
-                oled.clear(oldPipePos + 3, 63, oldPipePos + 13, 63);
+                if (showBackground) {
+                    oled.clear(oldPipePos, 63 - 6, oldPipePos + 16, 63 - 1);
+                    oled.clear(oldPipePos + 3, 63, oldPipePos + 13, 63);
+                }
                 oled.drawBitmap(oldPipePos, 0, bitmap__Low_pipe, 16, 64);
                 break;
             case 1:
-                oled.clear(oldPipePos, 63 - 15, oldPipePos + 16, 63 - 10);
-                oled.clear(oldPipePos + 3, 63 - 9, oldPipePos + 13, 63);
+                if (showBackground) {
+                    oled.clear(oldPipePos, 63 - 15, oldPipePos + 16, 63 - 10);
+                    oled.clear(oldPipePos + 3, 63 - 9, oldPipePos + 13, 63);
+                }
                 oled.drawBitmap(oldPipePos, 0, bitmap__Middle_pipe, 16, 64);
                 break;
             case 2:
-                oled.clear(oldPipePos, 63 - 26, oldPipePos + 16, 63 - 21);
-                oled.clear(oldPipePos + 3, 63 - 20, oldPipePos + 13, 63);
+                if (showBackground) {
+                    oled.clear(oldPipePos, 63 - 26, oldPipePos + 16, 63 - 21);
+                    oled.clear(oldPipePos + 3, 63 - 20, oldPipePos + 13, 63);
+                }
                 oled.drawBitmap(oldPipePos, 0, bitmap__Top_pipe, 16, 64);
                 break;
             }
 
             switch (newPipeType) {
             case 0:
-                oled.clear(newPipePos, 63 - 6, newPipePos + 16, 63 - 1);
-                oled.clear(newPipePos + 3, 63, newPipePos + 13, 63);
+                if (showBackground) {
+                    oled.clear(newPipePos, 63 - 6, newPipePos + 16, 63 - 1);
+                    oled.clear(newPipePos + 3, 63, newPipePos + 13, 63);
+                }
                 oled.drawBitmap(newPipePos, 0, bitmap__Low_pipe, 16, 64);
                 break;
             case 1:
-                oled.clear(newPipePos, 63 - 15, newPipePos + 16, 63 - 10);
-                oled.clear(newPipePos + 3, 63 - 9, newPipePos + 13, 63);
+                if (showBackground) {
+                    oled.clear(newPipePos, 63 - 15, newPipePos + 16, 63 - 10);
+                    oled.clear(newPipePos + 3, 63 - 9, newPipePos + 13, 63);
+                }
                 oled.drawBitmap(newPipePos, 0, bitmap__Middle_pipe, 16, 64);
                 break;
             case 2:
-                oled.clear(newPipePos, 63 - 26, newPipePos + 16, 63 - 21);
-                oled.clear(newPipePos + 3, 63 - 20, newPipePos + 13, 63);
+                if (showBackground) {
+                    oled.clear(newPipePos, 63 - 26, newPipePos + 16, 63 - 21);
+                    oled.clear(newPipePos + 3, 63 - 20, newPipePos + 13, 63);
+                }
                 oled.drawBitmap(newPipePos, 0, bitmap__Top_pipe, 16, 64);
                 break;
             }
@@ -318,9 +323,55 @@ StartBirdGame:
                 }
             }
 
+            if (PipeCounter >= gameCompleteScore && endless == 0) {
+                PauseClick = true;
+                WaitingScreen(oled);
+                showDifficultyClearScreen(difficulty, oled);
+                oled.update();
+                while (1) {
+                    if (PauseClick) {
+                        PauseClick = false;
+                        for (int8_t i = 0; i < 10; i++) {
+                            main_button.tick();
+                        }
+                    }
+                    main_button.tick();
+                    if (main_button.click()) {
+                        while (1) {
+                            static uint8_t menuPointer = 4;
+                            main_button.tick();
+                            if (main_button.click()) {
+                                menuPointer = (menuPointer == 4 ? 7 : 4);
+                            }
+                            showInfoScreen(difficulty, oled);
+                            oled.setCursor(127 - 6, menuPointer);
+                            oled.print("<");
+                            oled.update();
+                            if (main_button.hold()) {
+                                switch ((menuPointer)) {
+                                case 4:
+                                    goto NewScoreScreen;
+                                    break;
+                            
+                                case 7:
+                                    PipeIsDeadly = false;
+                                    endless = true;
+                                    GravityON = false;
+                                    WaitingScreen(oled);
+                                    goto startEndless;
+                                    break;
+                                }
+                            }
+                        }
+                        
+
+                    }
+                }
+            }
             if (GameOVER) {
                 PauseClick = true;
                 WaitingScreen(oled);
+                NewScoreScreen:
                 if (PipeCounter > BestScore) {
                     EEPROM.put(EEPROM_ADDR, PipeCounter);
                     BestScore = PipeCounter;

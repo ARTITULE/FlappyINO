@@ -66,14 +66,15 @@ void batCheckDraw(GyverOLED<SSD1306_128x64, OLED_BUFFER, OLED_SPI, OLED_CS, OLED
     oled.drawByte(0b11111111);
 }
 
-void drawMainMenuCard(int8_t EEPROM_ADDR, const char* planet, const char* difficulty, const uint8_t* bitmap, bool drawHold, byte dimensionIndex, GyverOLED<SSD1306_128x64, OLED_BUFFER, OLED_SPI, OLED_CS, OLED_DC, OLED_RST> &oled) {
+void drawMainMenuCard(int8_t EEPROM_ADDR, const char* planet, const char* difficulty, const uint8_t* bitmap, bool drawHold, byte dimensionIndex, int16_t gameCompleteScore, GyverOLED<SSD1306_128x64, OLED_BUFFER, OLED_SPI, OLED_CS, OLED_DC, OLED_RST> &oled) {
 
     int8_t rectDimensions[3][2] = {
         { 3, 19 },
         { 23, 39 },
         { 43, 59 }
     };
-    uint16_t bestScore;
+    int16_t bestScore;
+    EEPROM.get(EEPROM_ADDR, bestScore);
     oled.clear();
     oled.drawBitmap(55, 0, bitmap__Background, 64, 64);
     oled.setCursor(55, 1);
@@ -82,11 +83,14 @@ void drawMainMenuCard(int8_t EEPROM_ADDR, const char* planet, const char* diffic
     oled.setScale(1);
     oled.setCursor(55, 3);
     oled.print(difficulty);
-    oled.setScale(1);
+    if (bestScore >= gameCompleteScore) {
+        oled.setCursor(55, 4);
+        oled.print("Complete");
+    }
     oled.setCursor(55,5);
     oled.print("Reach :");
     oled.setCursor(103, 5);
-    oled.print(EEPROM.get(EEPROM_ADDR, bestScore));
+    oled.print(bestScore);
     if (drawHold) {
         printCentered("Hold to descend", 54, 1, oled);
     }
@@ -117,4 +121,28 @@ void drawSettingBox(int8_t row, const char* settingName, int8_t setting, const c
         oled.print(opt3);
     }
     
+}
+
+void showDifficultyClearScreen(const char* difficulty, GyverOLED<SSD1306_128x64, OLED_BUFFER, OLED_SPI, OLED_CS, OLED_DC, OLED_RST> &oled) {
+
+    oled.clear();
+
+    printCentered(difficulty, 1 * 8, 1, oled);
+    printCentered("CLEAR!", 3 * 8, 3, oled);
+    oled.line(8, 47, 119, 47);
+    printCentered("PRESS TO CONTINUE", 7 * 8, 1, oled);
+
+}
+
+void showInfoScreen(const char* difficulty, GyverOLED<SSD1306_128x64, OLED_BUFFER, OLED_SPI, OLED_CS, OLED_DC, OLED_RST> &oled) {
+
+    oled.clear();
+    oled.drawBitmap(0, 0, bitmap__Background, 64, 64);
+    oled.drawBitmap(63, 0, bitmap__Background, 64, 64);
+    printCentered("You have cleared the", 0 * 8, 1, oled);
+    printCentered(difficulty, 1 * 8, 1, oled);
+    printCentered("Would you like to", 2 * 8, 1, oled);
+    printCentered("EXIT", 4 * 8, 1, oled);
+    printCentered("or continue with", 5 * 8 + 4, 1, oled);
+    printCentered("ENDLESS MODE", 7 * 8, 1, oled);
 }
