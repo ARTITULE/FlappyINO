@@ -20,7 +20,9 @@ extern const uint8_t bitmap_Earth[] PROGMEM;
 extern const uint8_t bitmap_Jupiter[] PROGMEM;
 extern const uint8_t bitmap_Saturn[] PROGMEM;
 extern const uint8_t bitmap_verticalPattern[] PROGMEM;
-
+extern const uint8_t bitmap_Trophy[] PROGMEM;
+extern const uint8_t bitmap_lockClosed[] PROGMEM;
+extern const uint8_t bitmap_lockOpen[] PROGMEM;
 
 
 #endif

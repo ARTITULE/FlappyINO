@@ -66,7 +66,7 @@ void batCheckDraw(GyverOLED<SSD1306_128x64, OLED_BUFFER, OLED_SPI, OLED_CS, OLED
     oled.drawByte(0b11111111);
 }
 
-void drawMainMenuCard(int8_t EEPROM_ADDR, const char* planet, const char* difficulty, const uint8_t* bitmap, bool drawHold, byte dimensionIndex, int16_t gameCompleteScore, GyverOLED<SSD1306_128x64, OLED_BUFFER, OLED_SPI, OLED_CS, OLED_DC, OLED_RST> &oled) {
+void drawMainMenuCard(int8_t EEPROM_ADDR, const char* planet, const char* difficulty, const uint8_t* bitmap, bool drawHold, bool isLocked, byte dimensionIndex, int16_t gameCompleteScore, GyverOLED<SSD1306_128x64, OLED_BUFFER, OLED_SPI, OLED_CS, OLED_DC, OLED_RST> &oled) {
 
     int8_t rectDimensions[3][2] = {
         { 3, 19 },
@@ -74,6 +74,11 @@ void drawMainMenuCard(int8_t EEPROM_ADDR, const char* planet, const char* diffic
         { 43, 59 }
     };
     int16_t bestScore;
+    static int8_t firstPass;
+    firstPass ++;
+    if (firstPass >= 120) {
+        firstPass = 0;
+    }
     EEPROM.get(EEPROM_ADDR, bestScore);
     oled.clear();
     oled.drawBitmap(55, 0, bitmap__Background, 64, 64);
@@ -84,15 +89,31 @@ void drawMainMenuCard(int8_t EEPROM_ADDR, const char* planet, const char* diffic
     oled.setCursor(55, 3);
     oled.print(difficulty);
     if (bestScore >= gameCompleteScore) {
-        oled.setCursor(55, 4);
-        oled.print("Complete");
+        oled.drawBitmap(108, 23, bitmap_Trophy, 16, 16);
+    }
+    else if (bestScore < gameCompleteScore && isLocked != 1) {
+        oled.drawBitmap(108, 23, bitmap_lockOpen, 16, 16);
+    }
+    else {
+        oled.drawBitmap(108, 23, bitmap_lockClosed, 16, 16);
     }
     oled.setCursor(55,5);
     oled.print("Reach :");
     oled.setCursor(103, 5);
     oled.print(bestScore);
-    if (drawHold) {
+    if (drawHold && isLocked != 1) {
         printCentered("Hold to descend", 54, 1, oled);
+    }
+    else if (isLocked) {
+        if (firstPass < 40) {
+            printCentered("Locked", 54, 1, oled);
+        }
+        else if (firstPass > 40 && firstPass < 80) {
+            printCentered("Clear prior levels", 54, 1, oled);
+        }
+        else if (firstPass > 80) {
+            printCentered("To unlock", 54, 1, oled);
+        }
     }
     oled.roundRect(0, 0, 127, 63, OLED_STROKE);
     oled.clear(0, 0, 1, 63);

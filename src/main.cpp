@@ -142,7 +142,28 @@ void MainMenu() {
                 MenuPointer = 0;
             }
         }
+        static int16_t moonScore;
+        static int16_t earthScore;
+        EEPROM.get(S1_HI_SCR_ADDR, moonScore);
+        EEPROM.get(S2_HI_SCR_ADDR, earthScore);
 
+        static bool earthLocked;
+        static bool saturnLocked;
+
+        if (moonScore < GAME_COMPLETE_SCORE) {
+            earthLocked = true;
+            saturnLocked = true;
+        }
+        if (moonScore >= GAME_COMPLETE_SCORE) {
+            earthLocked = false;
+        }
+        if (earthScore < GAME_COMPLETE_SCORE) {
+            saturnLocked = true;
+        }
+        if (moonScore >= GAME_COMPLETE_SCORE && earthScore >= GAME_COMPLETE_SCORE) {
+            saturnLocked = false;
+        }
+        
         if (main_button.hold()) {
 
             switch (MenuPointer) {
@@ -150,11 +171,15 @@ void MainMenu() {
                 FBirdGame(S1_HI_SCR_ADDR, 0, settings.showAnimation, settings.showBackground, settings.showStarsBackground, GAME_COMPLETE_SCORE, oled, main_button);
                 return;
             case 3:
-                FBirdGame(S2_HI_SCR_ADDR, 1, settings.showAnimation, settings.showBackground, settings.showStarsBackground, GAME_COMPLETE_SCORE, oled, main_button);
-                return;
+                if (!earthLocked) {
+                    FBirdGame(S2_HI_SCR_ADDR, 1, settings.showAnimation, settings.showBackground, settings.showStarsBackground, GAME_COMPLETE_SCORE, oled, main_button);
+                    return;
+                }
             case 6:
-                FBirdGame(S3_HI_SCR_ADDR, 2, settings.showAnimation, settings.showBackground, settings.showStarsBackground, GAME_COMPLETE_SCORE, oled, main_button);
-                return;
+                if (!saturnLocked) {
+                    FBirdGame(S3_HI_SCR_ADDR, 2, settings.showAnimation, settings.showBackground, settings.showStarsBackground, GAME_COMPLETE_SCORE, oled, main_button);
+                    return;
+                }
             }
         }
 
@@ -172,15 +197,17 @@ void MainMenu() {
             }
 
 
+            
+
             switch (MenuPointer) {
             case 0:
-                drawMainMenuCard(S1_HI_SCR_ADDR, "Moon", "Steady", bitmap_Moon, drawHold, 0, GAME_COMPLETE_SCORE, oled);
+                drawMainMenuCard(S1_HI_SCR_ADDR, "Moon", "Steady", bitmap_Moon, drawHold, 0, 0, GAME_COMPLETE_SCORE, oled);
                 break;
             case 3:
-                drawMainMenuCard(S2_HI_SCR_ADDR, "Earth", "Rush", bitmap_Earth, drawHold, 1, GAME_COMPLETE_SCORE, oled);
+                drawMainMenuCard(S2_HI_SCR_ADDR, "Earth", "Rush", bitmap_Earth, drawHold, earthLocked, 1, GAME_COMPLETE_SCORE, oled);
                 break;
             case 6:
-                drawMainMenuCard(S3_HI_SCR_ADDR, "Saturn", "Frenzy", bitmap_Saturn, drawHold, 2, GAME_COMPLETE_SCORE, oled);
+                drawMainMenuCard(S3_HI_SCR_ADDR, "Saturn", "Frenzy", bitmap_Saturn, drawHold, saturnLocked, 2, GAME_COMPLETE_SCORE, oled);
                 break;
             }
         }
