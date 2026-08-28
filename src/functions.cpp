@@ -167,3 +167,99 @@ void showInfoScreen(const char* difficulty, GyverOLED<SSD1306_128x64, OLED_BUFFE
     printCentered("or continue with", 5 * 8 + 4, 1, oled);
     printCentered("ENDLESS MODE", 7 * 8, 1, oled);
 }
+
+void landingAnimation(GyverOLED<SSD1306_128x64, OLED_BUFFER, OLED_SPI, OLED_CS, OLED_DC, OLED_RST> &oled) {
+        
+    int16_t shipPos = 0;
+    int16_t offset = 0;
+    int16_t totalOffset = 0;
+    int16_t groundPos = 68;
+    int8_t offsetAmount = 0;
+    int8_t frameCounter = 0;
+    bool notLanded = true;
+    bool showFire = false;
+    while(1) {
+        
+        if (notLanded) {
+            static uint32_t offsetTimer = millis();
+            if (millis() - offsetTimer >= 20) {
+
+                static uint32_t fireTimer = millis();
+                if (millis() - fireTimer >= 200 && totalOffset >= 550 && offsetAmount != 1) {
+                    fireTimer = millis();
+                    showFire = !showFire;
+                }
+                else if (offsetAmount == 1 && notLanded == true) {
+                    showFire = true;
+                }
+                else if (offsetAmount == 1 && notLanded == false) {
+                    showFire = false;
+                }
+
+                offsetTimer = millis();
+
+                if (totalOffset <= 600) {
+                    offsetAmount = 5;
+                }
+                else if (totalOffset > 600 && totalOffset <= 800) {
+                    offsetAmount = 3;
+                }
+                else if (totalOffset > 950) {
+                    offsetAmount = 1;
+                }
+                if (shipPos < 63) {
+                    shipPos++;
+                }
+                if (offset > -62) {
+                    offset -= offsetAmount;
+                    totalOffset += offsetAmount;
+                }
+                else if (offset <= -62) {
+                    offset = 0;
+                }   
+                if (totalOffset >= 1000) {
+                    groundPos--;
+                    if (groundPos <= 63 - 15) {
+                        notLanded = false;
+                    }
+                }         
+            }
+        }
+
+
+        static uint32_t drawTimer = millis();
+        if (millis() - drawTimer >= (1000 / MENU_FPS)) {
+
+            drawTimer = millis();
+            oled.clear();
+            for (uint8_t i = 0; i < NUM_STARS; i++) {
+                uint8_t sPosX = pgm_read_byte(&StarX[i]);
+                uint8_t sPosY = pgm_read_byte(&StarY[i]);
+                uint8_t y = (sPosY + offset < 0 ? (sPosY + offset + 63) : (sPosY + offset));
+                for (uint8_t tile = 0; tile < 2; tile++) {
+                    oled.dot(sPosX + tile * 64, y, 1);
+                        
+                }
+            }
+            oled.drawBitmap(63 - 24, groundPos - 5, bitmap_LandingPad, 48, 16);
+            if (notLanded == false) {
+                oled.clear(46, 43, 80, 48);
+            }
+            oled.drawBitmap(63 - 24, shipPos - 60, bitmap_Spaceship, 48, 56);
+            if (showFire && notLanded) {
+                oled.drawBitmap(63 - 4, shipPos - 14, bitmap_Fire, 8, 8);
+            }
+            oled.drawBitmap(0, groundPos, bitmap_BackgroundMoon, 128, 16);
+            oled.update();
+        
+            if (notLanded == false) {
+                frameCounter ++;
+                if (frameCounter >= MENU_FPS * 1.5) {
+                    return;
+                }
+            }
+        }
+
+    }
+
+}

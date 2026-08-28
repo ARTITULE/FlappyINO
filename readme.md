@@ -79,16 +79,21 @@ The case is made to be assembled with 4 M3 Heat-set inserts. A battery under 40m
 
 ## Game Mechanics
 
-- There are three difficulties (Easy, Medium, Hard)
+- There are three difficulties: Steady, Rush, Frenzy (Easy, Medium, Hard).
 - Each press of the button makes the bird flap upward.
 - Gravity continuously pulls the bird downward.
 - Collision with the ground, ceiling, or a pipe ends the game.
-- All high scores for all the difficulties are saved in EEPROM and do not reset
-- Upon reaching 200 points you win the game*
-
-*not actually implemented i am working on it
+- All high scores for all the difficulties are saved in EEPROM and do not reset.
+- Upon reaching 100 points you clear the difficulty.
+- Harder difficulties are locked by default, clear previous difficulties to unlock further ones.
 
 ## Installation
+
+### Disclaimer: This guide presumes that you have installed and configured the PlatformIO extension for VS Code
+
+1. Clone or download this repository
+
+### Disclaimer: Use the guide below if you want to flash the outdated ArduinoIDE version
 
 1. Clone or download this repository.
 2. Drag the display library and the button library into the Libraries folder of the ArduinoIDE.

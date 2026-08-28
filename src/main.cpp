@@ -233,11 +233,9 @@ void loop() {
             oled.drawBitmap(0, 0, bitmap__Background, 64, 64);
             oled.drawBitmap(63, 0, bitmap__Background, 64, 64);
         }
-        oled.drawBitmap(19, 15, bitmap__FlappyBirdLogo, 90, 24);
-        oled.setCursorXY(25, 45);
-        oled.setScale(1);
-        oled.print("Press To Play");
-        printCentered("Hold for Settings", 7 * 8, 1, oled);
+        oled.drawBitmap(((124 - 90) / 2), 10, bitmap__FlappyBirdLogo, 90, 24);
+        printCentered("Press To Play", 38, 1, oled);
+        printCentered("Hold for Settings", 7 * 8 , 1, oled);
         batCheckDraw(oled);
         oled.update();
     }

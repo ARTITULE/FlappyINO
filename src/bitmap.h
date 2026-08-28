@@ -23,6 +23,9 @@ extern const uint8_t bitmap_verticalPattern[] PROGMEM;
 extern const uint8_t bitmap_Trophy[] PROGMEM;
 extern const uint8_t bitmap_lockClosed[] PROGMEM;
 extern const uint8_t bitmap_lockOpen[] PROGMEM;
+extern const uint8_t bitmap_Spaceship[] PROGMEM;
+extern const uint8_t bitmap_Fire[] PROGMEM;
+extern const uint8_t bitmap_LandingPad[] PROGMEM;
 
 
 #endif

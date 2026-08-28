@@ -26,9 +26,11 @@ int8_t Pipe_Collision_Points[2][3] = {
 
 void FBirdGame(int8_t EEPROM_ADDR, int8_t Difficulty, int8_t setting1, int8_t setting2, int8_t setting3, int16_t game_complete_score, GyverOLED<SSD1306_128x64, OLED_BUFFER, OLED_SPI, OLED_CS, OLED_DC, OLED_RST> &oled, Button &main_button) {
 
+
+    bool wasOnPlanetBefore = false;
+
 StartBirdGame:
 
-    WaitingScreen(oled);
 
     float BirdU = 0.0;
     float BGravity = 0.0;
@@ -64,6 +66,12 @@ StartBirdGame:
     int8_t firstBackgroundPos = 0;
     int8_t secondBackgroundPos = 128;
     uint8_t backgroundScrollX = 0; 
+
+    if (showAnimation && wasOnPlanetBefore == false) {
+        wasOnPlanetBefore = true;
+        landingAnimation(oled);
+    }
+    WaitingScreen(oled);
 
     startEndless:
 
