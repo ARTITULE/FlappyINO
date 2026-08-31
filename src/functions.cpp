@@ -168,61 +168,130 @@ void showInfoScreen(const char* difficulty, GyverOLED<SSD1306_128x64, OLED_BUFFE
     printCentered("ENDLESS MODE", 7 * 8, 1, oled);
 }
 
-void landingAnimation(GyverOLED<SSD1306_128x64, OLED_BUFFER, OLED_SPI, OLED_CS, OLED_DC, OLED_RST> &oled) {
+void landingAnimation(bool isLanding, GyverOLED<SSD1306_128x64, OLED_BUFFER, OLED_SPI, OLED_CS, OLED_DC, OLED_RST> &oled) {
         
-    int16_t shipPos = 0;
-    int16_t offset = 0;
-    int16_t totalOffset = 0;
-    int16_t groundPos = 68;
-    int8_t offsetAmount = 0;
+    int16_t shipPos = isLanding ? 0 : 63;
+    float offset = 0;
+    float totalOffset = isLanding ? 0 : 1000;
+    int16_t groundPos = isLanding ? 104 : 48;
+    float offsetAmount = isLanding ? 5 : 0.5;
     int8_t frameCounter = 0;
-    bool notLanded = true;
-    bool showFire = false;
+    int8_t shakeX = 0;
+    int8_t shakeY = 0;
+    int8_t groundShakeX = 0;
+    int8_t groundShakeY = 0;
+    bool animationNotDone = true;
+    bool showFire = !isLanding;
+    bool addShake = !isLanding;
+
     while(1) {
         
-        if (notLanded) {
+        if (animationNotDone) {
             static uint32_t offsetTimer = millis();
-            if (millis() - offsetTimer >= 20) {
 
+            if (millis() - offsetTimer >= 20) {
+   
+                offsetTimer = millis();
+                
                 static uint32_t fireTimer = millis();
-                if (millis() - fireTimer >= 200 && totalOffset >= 550 && offsetAmount != 1) {
-                    fireTimer = millis();
-                    showFire = !showFire;
+                if (isLanding) {
+                    if (millis() - fireTimer >= 400 && totalOffset >= 550 && offsetAmount > 1) {
+                        fireTimer = millis();
+                        showFire = !showFire;
+                    }
+                    else if (offsetAmount <= 1 && animationNotDone == true) {
+                        showFire = true;
+                    }
+                    else if (offsetAmount <= 1 && animationNotDone == false) {
+                        showFire = false;
+                    }
                 }
-                else if (offsetAmount == 1 && notLanded == true) {
+                else {
                     showFire = true;
                 }
-                else if (offsetAmount == 1 && notLanded == false) {
-                    showFire = false;
-                }
 
-                offsetTimer = millis();
 
-                if (totalOffset <= 600) {
-                    offsetAmount = 5;
-                }
-                else if (totalOffset > 600 && totalOffset <= 800) {
-                    offsetAmount = 3;
-                }
-                else if (totalOffset > 950) {
-                    offsetAmount = 1;
-                }
-                if (shipPos < 63) {
-                    shipPos++;
-                }
-                if (offset > -62) {
-                    offset -= offsetAmount;
-                    totalOffset += offsetAmount;
-                }
-                else if (offset <= -62) {
-                    offset = 0;
-                }   
-                if (totalOffset >= 1000) {
-                    groundPos--;
-                    if (groundPos <= 63 - 15) {
-                        notLanded = false;
+                if (isLanding) {
+                    if (totalOffset <= 600) {
+                        offsetAmount = 5;
                     }
-                }         
+                    else if (totalOffset > 600 && totalOffset <= 800) {
+                        offsetAmount = 3;
+                    }
+                    else if (totalOffset > 950 && totalOffset <= 980) {
+                        offsetAmount = 1;
+                        addShake = true;
+                    }
+                    else if (totalOffset > 995) {
+                        offsetAmount = 0.5;
+                        addShake = true;
+                    }
+
+
+                    if (shipPos < 63) {
+                        shipPos++;
+                    }
+
+
+                    if (offset > -62) {
+                        offset -= offsetAmount;
+                        totalOffset += offsetAmount;
+                    }
+                    else if (offset <= -62) {
+                        offset = 0;
+                    }   
+                    if (totalOffset >= 1000) {
+                        groundPos--;
+                        if (groundPos <= 63 - 15) {
+                            animationNotDone = false;
+                        }
+                    } 
+                }
+
+                else {
+                    if (totalOffset > 995) {
+                        offsetAmount = 0.5;
+                        addShake = true;
+                    }
+                    else if (totalOffset > 965 && totalOffset <= 980) {
+                        offsetAmount = 1;
+                        addShake = true;
+                    }
+                    else if (totalOffset > 600 && totalOffset <= 800) {
+                        offsetAmount = 3;
+                        addShake = false;
+                    }
+                    else if (totalOffset <= 600) {
+                        offsetAmount = 5;
+                        addShake = false;
+                    }
+
+
+
+                    if (shipPos > 0 && totalOffset <= 63 * 5) {
+                        shipPos--; 
+                        if (shipPos <= 0) {
+                            animationNotDone = false;
+                        }
+                    }
+
+
+
+                    if (offset < 0) {
+                        offset += offsetAmount;
+                        totalOffset -= offsetAmount;
+                    }
+                    else if (offset >= -0) {
+                        offset = -62;
+                    }   
+                    if (totalOffset >= 0) {
+                        groundPos++;
+
+                    } 
+
+                }
+
+        
             }
         }
 
@@ -232,6 +301,15 @@ void landingAnimation(GyverOLED<SSD1306_128x64, OLED_BUFFER, OLED_SPI, OLED_CS, 
 
             drawTimer = millis();
             oled.clear();
+            if (addShake && animationNotDone) {
+                if (!isLanding) {
+                    groundShakeX = random(0, 2);
+                    groundShakeY = random(0, 2);
+                }
+                shakeX = random(0, 2);
+                shakeY = random(0, 2);                
+            }
+
             for (uint8_t i = 0; i < NUM_STARS; i++) {
                 uint8_t sPosX = pgm_read_byte(&StarX[i]);
                 uint8_t sPosY = pgm_read_byte(&StarY[i]);
@@ -241,22 +319,26 @@ void landingAnimation(GyverOLED<SSD1306_128x64, OLED_BUFFER, OLED_SPI, OLED_CS, 
                         
                 }
             }
-            oled.drawBitmap(63 - 24, groundPos - 5, bitmap_LandingPad, 48, 16);
-            if (notLanded == false) {
+            oled.drawBitmap(29 + groundShakeX, groundPos - 40 + groundShakeY, bitmap_LandingPadArm, 16, 48);
+            oled.drawBitmap(63 - 24 + groundShakeX, groundPos - 5 + groundShakeY, bitmap_LandingPad, 48, 16);
+            if (animationNotDone == false) {
                 oled.clear(46, 43, 80, 48);
             }
-            oled.drawBitmap(63 - 24, shipPos - 60, bitmap_Spaceship, 48, 56);
-            if (showFire && notLanded) {
-                oled.drawBitmap(63 - 4, shipPos - 14, bitmap_Fire, 8, 8);
+            oled.drawBitmap(63 - 24 + shakeX, shipPos - 60 + shakeY, bitmap_Spaceship, 48, 56);
+            if (showFire && animationNotDone) {
+                oled.drawBitmap(63 - 4 + shakeX, shipPos - 14 + shakeY, bitmap_Fire, 8, 8);
             }
-            oled.drawBitmap(0, groundPos, bitmap_BackgroundMoon, 128, 16);
+            oled.drawBitmap(0 + groundShakeX, groundPos + groundShakeY, bitmap_BackgroundMoon, 128, 16);
             oled.update();
         
-            if (notLanded == false) {
+            if (animationNotDone == false && isLanding) {
                 frameCounter ++;
                 if (frameCounter >= MENU_FPS * 1.5) {
                     return;
                 }
+            }
+            else if (animationNotDone == false && not isLanding) {
+                return;
             }
         }
 

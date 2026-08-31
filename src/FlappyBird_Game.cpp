@@ -69,7 +69,7 @@ StartBirdGame:
 
     if (showAnimation && wasOnPlanetBefore == false) {
         wasOnPlanetBefore = true;
-        landingAnimation(oled);
+        landingAnimation(true, oled);
     }
     WaitingScreen(oled);
 
@@ -429,6 +429,9 @@ StartBirdGame:
                     }
 
                     if (main_button.hold()) {
+                        if (showAnimation) {
+                            landingAnimation(false, oled);                            
+                        }
                         return;
                     }
                 }

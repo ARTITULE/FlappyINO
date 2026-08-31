@@ -113,9 +113,9 @@ void Settings() {
             oled.clear();
             oled.roundRect(0, 0, 127, 63, OLED_STROKE);
             printCentered("Settings", 1 * 8, 1, oled);
-            drawSettingBox(3, "Land. Anim. :", settings.showAnimation, "No", "Yes", "", oled);
-            drawSettingBox(4, "Show Backg. :", settings.showBackground, "No", "Yes", "", oled);
-            drawSettingBox(5, "Show Stars :", settings.showStarsBackground, "No", "All", "Menu", oled);
+            drawSettingBox(3, "Show Animation:", settings.showAnimation, "No", "Yes", "", oled);
+            drawSettingBox(4, "Show Backg.:", settings.showBackground, "No", "Yes", "", oled);
+            drawSettingBox(5, "Show Stars:", settings.showStarsBackground, "No", "All", "Menu", oled);
             oled.setCursor(4, SETTING_AMOUNT + 3);
             oled.print("Return (Hold)");
             oled.setCursor(127 - 6, menuPointer + 3);
