@@ -89,13 +89,13 @@ void drawMainMenuCard(int8_t EEPROM_ADDR, const char* planet, const char* diffic
     oled.setCursor(55, 3);
     oled.print(difficulty);
     if (bestScore >= gameCompleteScore) {
-        oled.drawBitmap(108, 23, bitmap_Trophy, 16, 16);
+        oled.drawBitmap(104, 23, bitmap_Trophy, 16, 16);
     }
     else if (bestScore < gameCompleteScore && isLocked != 1) {
-        oled.drawBitmap(108, 23, bitmap_lockOpen, 16, 16);
+        oled.drawBitmap(104, 23, bitmap_lockOpen, 16, 16);
     }
     else {
-        oled.drawBitmap(108, 23, bitmap_lockClosed, 16, 16);
+        oled.drawBitmap(104, 23, bitmap_lockClosed, 16, 16);
     }
     oled.setCursor(55,5);
     oled.print("Reach :");
