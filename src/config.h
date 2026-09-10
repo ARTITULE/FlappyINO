@@ -4,7 +4,6 @@
 #define OLED_RST 8
 #define OLED_DC 9
 #define OLED_CS 10
-// #define OLED_SPI_SPEED 4000000ul
 
 #define BUTTON_PIN 3
 #define MENU_FPS 30
@@ -16,6 +15,8 @@
 #define BATTERY_FULL 4200
 #define BATTERY_EMPTY 2900
 
-#define GAME_COMPLETE_SCORE 10
+// The line below sets the score you need to clear a difficulty.
+// See the README "Game Completion Score" section to get more information
+#define GAME_COMPLETE_SCORE 50
 
 #endif
