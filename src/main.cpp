@@ -1,10 +1,15 @@
 /*
+This is the main firmware file of the FlappyINO project. The main configurations are in the confing.h file.
+Open this file in VS Code that has the PlatformIO extension installed and set up.
+Then select the correct environment and click upload.
 
-This is a project licensed under the MIT License
-Project by ARTITULE
 
 More details can be found on the GitHub page:
 https://github.com/ARTITULE/FlappyINO
+
+
+This is a project licensed under the MIT License
+Project by ARTITULE
 
 */
 

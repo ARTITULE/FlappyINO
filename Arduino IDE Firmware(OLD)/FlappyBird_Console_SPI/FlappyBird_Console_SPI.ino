@@ -1,6 +1,9 @@
 /*
 
-This is a projaect licenced under the MIT Licence 
+Please note, this is the old version(v1) of the project. You can find the new version(currently v2)
+in the /src folder. That is the version that you should upload for the best experience.
+
+This is a project licensed under the MIT Licence 
 Project by ARTITULE
 
 More details can be found on the GitHub page:
