@@ -4,6 +4,10 @@ This project is a simple handheld Flappy Bird–inspired game built using an Ard
 
 The PCB is the intended way to build this project, though the non PCB version is a good way to try it out first. You can find the components needed to build the non PCB version at [Non PCB Version](#non-pcb-version).
 
+Check the video below to see the v2 release. I explain all the features and the design changes along with a full level clear (this is the current version):
+
+[![Video Title](https://img.youtube.com/vi/2ZuoSsNO6Mo/maxresdefault.jpg)](https://www.youtube.com/watch?v=2ZuoSsNO6Mo)
+
 Curious how it's built? Watch the video below (btw this is v1 build that is why it looks a little different):
 
 [![Video Title](https://img.youtube.com/vi/vfzLBbyyz0U/maxresdefault.jpg)](https://youtu.be/vfzLBbyyz0U)
@@ -35,6 +39,7 @@ V2 adds a lot of new features like:
 - A game progression system (difficulty unlocks, Endless Mode, etc.)
 - Settings menu for visual options
 - Landing/takeoff animations
+- Better Level Selection Screens
 - Better UI, etc.
 
 All the new additions are marked (**New in V2**)
@@ -72,6 +77,8 @@ All the new additions are marked (**New in V2**)
 Completing a game is one of the most satisfying things you can experience. So it is important to set the completion score appropriately. The default score to beat is 50 points for each difficulty level, this is an amount that most people can achieve and i advise you to start out with this score and possibly increase it higher(75, 100, etc.) later. This way you can experience all the game difficulties and then play the ones you like and try getting higher scores in Endless mode.
 
 However be warned if increasing the score, you are probably going to experience performance issues(especially on higher difficulties) and you might feel like the game is stuttering and periodically slowing down. This is mostly linked to the amount of sprites that are drawn to the screen each frame. See [Settings Menu](#settings-menu) to see how you can mitigate this issue.
+
+But if you are building the non PCB version or you do not care about game progression feel free to set it to something like 5 or 10 and enjoy just playing the game.
 
 ## Settings Menu
 
@@ -138,7 +145,7 @@ The case is made to be assembled with the following parts:
 - 4 M2x14mm bolts
 - plus an optional keychain ring can be added to carry the console on a keychain
 
-A battery under 40mm in length, 20mm in width and 6mm in height is preferred. Bigger batteries might not fit into the case.
+A battery under 40mm in length, 20mm in width and 6mm in height is preferred. Note that if the battery is over 30mm in length it can not be more than 15mm in width and if the battery is over than 15mm in width it can not be more than 30mm in length. This is due to how the case is built. Bigger batteries in general probably will not fit into the case.
 
 ## Non PCB Version
 
