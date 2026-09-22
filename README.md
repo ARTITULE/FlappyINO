@@ -28,6 +28,7 @@ Curious how it's built? Watch the video below (btw this is v1 build that is why 
   - [Button Pinout](#button-pinout)
 - [Software Requirements](#software-requirements)
 - [Installation](#installation)
+- [AI Use](#ai-use)
 - [License](#license)
 - [Contributing](#contributing)
 
@@ -203,6 +204,10 @@ Make the connections provided above and upload the code. See [Installation secti
 5. Upload the sketch to your Arduino.
 6. For the PCB you are going to need the USB-ASP and the drivers
 7. If you are using a custom ATmega328P Core then you can run the microcontroller with 8MHz internal clock then the 16MHz crystal is not needed.
+
+## AI Use
+
+Used AI for documentation search and for questions regarding the libraries used as some of the libraries were written by a small number of people and have very limited documentation.
 
 ## License
 
