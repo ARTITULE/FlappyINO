@@ -1,0 +1,12 @@
+Item,Qty,Supplier,Cost/item,Total Cost,link
+PCB,1,JLCPCB,$2.00,$2.00,https://jlcpcb.com
+MICROCHIP ATMEGA328P-AU,1,LCSC,$2.19,$2.19,https://www.lcsc.com/product-detail/C14877.html?s_z=n_q_c14877&globalKeyword=c14877
+ALPSALPINE SMD Push Button(MOQ 5),5,LCSC,$0.17,$0.88,https://www.lcsc.com/product-detail/C370971.html?s_z=n_q_C370971&globalKeyword=C370971
+200mAh LiPo Battery,1,Amazon,$7.99,$7.99,https://www.amazon.com/YTKavq-Battery-Lithium-Rechargeable-Connector/dp/B08TTS88K7?crid=2DKQHUBYIBW12&dib=eyJ2IjoiMSJ9.pjYj9sxyy2XvHVdP4zPrw80bAzEKum9AgFA0E68nDnsKwmM3F2TImQwX9nWAr-_DJIDXelRzhnMeR4oVKcHEHmoBfS912E3-lPRBLuEXSm_6Yc8ecXJcdczOdq3JkHI6ybp-Kd4eg76ZIPOZW4qYeIfFoZp3yTx0mn_BxYQ2BIXmTPknDPzbpaEMuHS91_rjqrMHgjXCLnBH7ZXNYAo09BFjmCYogZCbaQgaeBD_eG-8KIgraL1AeWvHjriQQ-8mBx6uJRGFIWdr_extZ-J5ObtUlBxqevyZm1HQqZwmB04.vz_iV9GkJUwGQLT6_v_OisBBKGLCalDAvN2FR5ByqwU&dib_tag=se&keywords=200%2Bmah%2Blipo&qid=1794329213&sprefix=200%2Bmah%2Blip%2Caps%2C411&sr=8-3&th=1
+TP4056 Module(MOQ 6),6,Amazon,$5.99,$5.99,https://www.amazon.com/Charging-Lithium-Battery-Charger-Protection/dp/B08FSRV7GS?crid=3DG56610GXJNF&dib=eyJ2IjoiMSJ9.-UiBtZJmSZvxE3u_ela8FVY6JBEU5R6BcJjnIbdCHaD4r-M5s59L4s1n2G8Wb_pubRhH2YyYVFnZm-Vt1488DLJo8xRr8w5-n4QP-pS4j967phnJbbVOxES_e4HWKu6GBEBC4MZB8czIs5WzShhIhPTaMFca1HH09sz8Fm_V9gr7AXlVYrJB91kYFpwKxqvhNY1dOj_CZUh62kaq0_sLPADVKh2vLJipAlBWWeJ363o.n7eoPpHkHXgVz5B88Bk_8yQMY1zGfCrCI8hocpJ3-nw&dib_tag=se&keywords=tp4056&qid=1794329419&sprefix=tp40%2Caps%2C348&sr=8-5&th=1
+Power Switch(MOQ 20),20,Amazon,$9.79,$9.79,https://www.amazon.com/uxcell-Position-Panel-Vertical-Switch/dp/B01HSKNHKY?crid=4NBNNUWPCX17&dib=eyJ2IjoiMSJ9.uobXdzvD_PYRFDGBHD1RFZZG23ViPHj3QdPsfO1nIT2cnvFWf2-1vQXTQjtarA6QjRwSuTIz7_PiiCE_X4vlCtNUWDIX7oC4Jj29_cr23wrzi5DuzQseQS2pyvnOYLMyz0cJ3NK1Dldk7whA8ADZU3z0BCiovCB9s9Cg35L0HjXKdGCAnqhaLN5EcCyK-xxiBRorDOtTO_osj32jUZFtCxh7WNKsBPGPOJG6e28iyIs.9SQ2DO6y8LBSlvZxpjkSR3pHabfk5Ls3HqUmQ7s8Ny4&dib_tag=se&keywords=small+2+position+6+pin+switch&qid=1794329538&sprefix=small2+position+6+pin+switch%2Caps%2C284&sr=8-14
+muRata 16MHz Crystal(MOQ 5),5,LCSC,$0.28,$1.65,https://www.lcsc.com/product-detail/C1870467.html?s_z=n_q_c1870467&globalKeyword=c1870467
+100nF 0402 Ceramic Capacitor(MOQ 100),100,LCSC,$0.009,$0.9,https://www.lcsc.com/product-detail/C307331.html?s_z=n_q_c307331&globalKeyword=c307331
+10k 0402 Resistor(MOQ 100),100,LCSC,$0.0028,$0.28,https://www.lcsc.com/product-detail/C25744.html?s_z=n_q_c25744&globalKeyword=c25744
+Estimated total shipping,1,,,$30.00,
+Estimated TOTAL,,,,$61.67,
